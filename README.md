@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Polso
 
-## Getting Started
+A real-time events dashboard that receives data from external applications through a REST API, displays it in a live feed, and visualizes it with charts. Built with Next.js, Supabase, and shadcn/ui.
 
-First, run the development server:
+Polso is part of a series of bootcamp apps alongside [Pane](https://github.com/TomGem/Pane).
+
+## Features
+
+- **REST API** — POST endpoint for ingesting events with API key authentication
+- **Live feed** — real-time event updates via Supabase Realtime (PostgreSQL subscriptions)
+- **Charts** — events timeline, channel distribution, NEO scatter plot, space weather bar chart
+- **KPI cards** — total events, events today, channel count, critical events (7d)
+- **Multi-project** — each project has its own API key and isolated data
+- **Channel filtering** — channels are created dynamically when events are pushed
+- **Search** — full-text search across event titles and descriptions
+- **Favorites** — mark important events with visual highlighting
+- **NASA integration** — automated polling of DONKI (space weather) and NEO (asteroids) APIs
+- **Export/Import** — backup and restore event data as JSON
+- **Dark/Light mode** — system-aware theme toggle
+
+## Quick start
 
 ```bash
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.local.example .env.local
+# Edit .env.local with your Supabase credentials
+
+# Run the Supabase schema (see docs/setup.md)
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) and create your first project at `/projects`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) |
+| Database | Supabase (PostgreSQL + Realtime) |
+| UI | Tailwind CSS + shadcn/ui |
+| Charts | Recharts (via shadcn/ui Charts) |
+| Theming | next-themes |
+| Icons | Lucide React |
+| Font | SF Pro (macOS system font) |
 
-## Learn More
+## Documentation
 
-To learn more about Next.js, take a look at the following resources:
+- [Setup guide](docs/setup.md) — Supabase configuration, environment variables, Vercel deployment
+- [API reference](docs/api.md) — endpoints, authentication, request/response formats
+- [NASA module](docs/nasa-module.md) — DONKI and NEO polling, event mapping, cron configuration
+- [Database schema](docs/database.md) — tables, indexes, RLS policies, Realtime setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Pushing events
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Once you have a project and its API key, push events from any application:
 
-## Deploy on Vercel
+```bash
+curl -X POST https://your-app.vercel.app/api/events \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -d '{
+    "channel": "my-app",
+    "title": "User signed up",
+    "description": "New user registered via OAuth",
+    "tags": ["user", "signup"],
+    "importance": "normal"
+  }'
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT

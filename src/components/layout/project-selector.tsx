@@ -48,11 +48,13 @@ export function ProjectSelector() {
   return (
     <Select value={selected} onValueChange={handleChange}>
       <SelectTrigger className="w-[220px]">
-        <SelectValue placeholder="Select project" />
+        <SelectValue placeholder="Select project">
+          {(value: string) => projects.find((p) => p.id === value)?.name ?? "Select project"}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         {projects.map((p) => (
-          <SelectItem key={p.id} value={p.id}>
+          <SelectItem key={p.id} value={p.id} label={p.name}>
             {p.name}
           </SelectItem>
         ))}

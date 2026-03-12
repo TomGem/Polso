@@ -100,11 +100,9 @@ export default function ProjectsPage() {
         </div>
 
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger>
-            <Button>
+          <DialogTrigger render={<Button />}>
               <Plus className="mr-2 h-4 w-4" />
               New Project
-            </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -165,11 +163,9 @@ export default function ProjectsPage() {
                       </CardDescription>
                     )}
                   </div>
-                  <Link href={`/dashboard/${project.id}`}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <ExternalLink className="h-4 w-4" />
-                    </Button>
-                  </Link>
+                  <Button variant="ghost" size="icon" className="h-8 w-8" nativeButton={false} render={<Link href={`/dashboard/${project.id}`} />}>
+                    <ExternalLink className="h-4 w-4" />
+                  </Button>
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -223,7 +219,7 @@ export default function ProjectsPage() {
           </CardHeader>
           <CardContent>
             <pre className="overflow-x-auto rounded-lg bg-muted p-4 font-mono text-sm">
-              {`curl -X POST ${typeof window !== "undefined" ? window.location.origin : "https://your-app.vercel.app"}/api/events \\
+              {`curl -X POST https://your-app.vercel.app/api/events \\
   -H "Content-Type: application/json" \\
   -H "x-api-key: YOUR_API_KEY" \\
   -d '{

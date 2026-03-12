@@ -14,7 +14,7 @@ import { EventsByChannel } from "@/components/charts/events-by-channel";
 import { NeoScatter } from "@/components/charts/neo-scatter";
 import { SpaceWeatherBar } from "@/components/charts/space-weather-bar";
 import { Button } from "@/components/ui/button";
-import { Download, Upload, Star } from "lucide-react";
+import { Download, Upload, Star, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 interface Stats {
@@ -204,6 +204,25 @@ export default function ProjectDashboard({
           </Button>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={async () => {
+              await fetch("/api/cron/nasa", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ project_id: projectId }),
+              });
+              fetchEvents();
+              fetchStats();
+              fetchChannels();
+              fetchAllEventsForCharts();
+              toast.success("Refreshed");
+            }}
+          >
+            <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
+            Refresh
+          </Button>
           <Button variant="outline" size="sm" onClick={handleExport}>
             <Download className="mr-1.5 h-3.5 w-3.5" />
             Export

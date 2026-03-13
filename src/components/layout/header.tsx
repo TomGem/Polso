@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Activity, FolderOpen } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
+import { NotificationToggle } from "./notification-toggle";
 import { ProjectSelector } from "./project-selector";
 
 export function Header() {
@@ -26,6 +27,7 @@ export function Header() {
             <FolderOpen className="h-4 w-4" />
             Projects
           </Link>
+          <NotificationToggle />
           <ThemeToggle />
         </nav>
       </div>

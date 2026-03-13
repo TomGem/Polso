@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, use } from "react";
+import { useCallback, useEffect, useRef, useState, use } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { EventRow } from "@/lib/supabase/types";
 import { useRealtimeEvents } from "@/hooks/use-realtime-events";
@@ -16,6 +16,7 @@ import { SpaceWeatherBar } from "@/components/charts/space-weather-bar";
 import { Button } from "@/components/ui/button";
 import { Download, Upload, Star, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { useNotifications } from "@/hooks/use-notifications";
 
 interface Stats {
   totalEvents: number;
@@ -43,6 +44,9 @@ export default function ProjectDashboard({
   const [limit, setLimit] = useState(20);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [newEventIds, setNewEventIds] = useState<Set<string>>(new Set());
+  const newEventTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const { notify } = useNotifications();
 
   const fetchEvents = useCallback(async () => {
     const params = new URLSearchParams({
@@ -109,6 +113,26 @@ export default function ProjectDashboard({
       }
       return prev;
     });
+
+    // Browser notification for important events
+    notify(newEvent);
+
+    // Visual highlight for new events (fade out after 5s)
+    setNewEventIds((prev) => new Set(prev).add(newEvent.id));
+    const existing = newEventTimers.current.get(newEvent.id);
+    if (existing) clearTimeout(existing);
+    newEventTimers.current.set(
+      newEvent.id,
+      setTimeout(() => {
+        setNewEventIds((prev) => {
+          const next = new Set(prev);
+          next.delete(newEvent.id);
+          return next;
+        });
+        newEventTimers.current.delete(newEvent.id);
+      }, 5000)
+    );
+
     // Refresh stats
     fetchStats();
     fetchChannels();
@@ -235,7 +259,7 @@ export default function ProjectDashboard({
       </div>
 
       {/* Event Feed */}
-      <EventFeed events={events} onToggleFavorite={handleToggleFavorite} />
+      <EventFeed events={events} onToggleFavorite={handleToggleFavorite} highlightIds={newEventIds} />
 
       {/* Pagination */}
       <Pagination

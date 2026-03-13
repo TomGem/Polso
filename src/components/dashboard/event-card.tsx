@@ -30,9 +30,10 @@ const IMPORTANCE_STYLES: Record<string, string> = {
 interface EventCardProps {
   event: EventRow;
   onToggleFavorite: (id: string) => void;
+  highlight?: boolean;
 }
 
-export function EventCard({ event, onToggleFavorite }: EventCardProps) {
+export function EventCard({ event, onToggleFavorite, highlight }: EventCardProps) {
   const Icon = ICON_MAP[event.icon || ""] || Globe;
   const importanceStyle = IMPORTANCE_STYLES[event.importance] || "";
 
@@ -40,7 +41,7 @@ export function EventCard({ event, onToggleFavorite }: EventCardProps) {
     <Card
       className={`border-l-4 ${importanceStyle} transition-all hover:shadow-md ${
         event.importance === "critical" ? "bg-destructive/5" : ""
-      }`}
+      } ${highlight ? "ring-2 ring-chart-1 animate-pulse" : ""}`}
     >
       <CardContent className="flex items-start gap-4 py-4">
         <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">

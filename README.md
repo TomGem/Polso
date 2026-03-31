@@ -2,7 +2,7 @@
 
 A real-time events dashboard that receives data from external applications through a REST API, displays it in a live feed, and visualizes it with charts. Built with Next.js, Supabase, and shadcn/ui.
 
-Polso is part of a series of bootcamp apps alongside [Pane](https://github.com/TomGem/Pane).
+Polso is a tech demo and has no real function.
 
 ## Features
 
